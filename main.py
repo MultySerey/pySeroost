@@ -1,31 +1,31 @@
+from os import path, listdir
 import docx
 import pymupdf
-from os import path, listdir
+from typing import Dict
 
 
-def handle_docx(file_path: str) -> str:
-    with open(file_path, 'rb') as f:
-        return "\n".join([i.text for i in docx.Document(f).paragraphs])
+def index_document(doc_content: str) -> Dict[str, int]:
+    raise NotImplementedError
 
 
-def handle_pdf(file_path: str) -> str:
-    return "".join([page.get_text() for page in pymupdf.Document(file_path)])
-
-
-def handle_file(doc_name: str) -> None:
-    match path.splitext(doc_name)[-1]:
-        case ".docx":
-            pass
-            print(handle_docx(doc_name))
-        case '.pdf':
-            print(handle_pdf(doc_name))
-        case _:
-            pass
+def read_doc(doc_name: str) -> str | None:
+    try:
+        with open(doc_name, 'rb') as f:
+            match path.splitext(doc_name)[-1]:
+                case ".docx":
+                    return "\n".join([i.text for i in docx.Document(f).paragraphs])
+                case '.pdf':
+                    return "".join([page.get_text() for page in pymupdf.Document(f)])
+                case _:
+                    return None
+    except PermissionError as e:
+        print(e)
+        return None
 
 
 def main():
     for f in listdir("."):
-        handle_file(f)
+        print(read_doc(f))
 
 
 if __name__ == "__main__":
