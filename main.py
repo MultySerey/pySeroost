@@ -1,10 +1,9 @@
 from os import path, listdir
 import docx
 import pymupdf
-from typing import Dict
 
 
-def index_document(doc_content: str) -> Dict[str, int]:
+def index_document(doc_content: str) -> dict[str, int]:
     try:
         raise NotImplementedError
     except NotImplementedError:
@@ -38,7 +37,7 @@ def read_doc(doc_name: str) -> str | None:
 
 def main():
     # HashMap[filePath, HashMap[String, usize]]
-    all_documents = Dict[str, Dict[str, int]]
+    all_documents = dict[str, dict[str, int]]
 
     for doc in listdir("."):
         doc_content = read_doc(doc)

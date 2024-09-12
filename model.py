@@ -1,8 +1,7 @@
-from typing import Dict
 from math import log10
 
-DocFreq = Dict[str, int]
-TermFreq = Dict[str, int]
+DocFreq = dict[str, int]
+TermFreq = dict[str, int]
 
 
 class Doc():
@@ -10,7 +9,7 @@ class Doc():
     count: int
 
 
-Docs = Dict[str, Doc]
+Docs = dict[str, Doc]
 
 
 class Model():
