@@ -5,16 +5,18 @@ TermFreq = dict[str, int]
 
 
 class Doc:
-    tf: TermFreq
-    count: int
+    def __init__(self, tf: TermFreq, count: int) -> None:
+        self.tf: TermFreq = tf
+        self.count: int = count
 
 
 Docs = dict[str, Doc]
 
 
 class Model:
-    docs: Docs
-    df: DocFreq
+    def __init__(self, docs: Docs, df: DocFreq) -> None:
+        self.docs: Docs = docs
+        self.df: DocFreq = df
 
 
 def compute_tf(t: str, doc: Doc) -> float:
