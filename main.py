@@ -37,17 +37,28 @@ def read_doc(doc_name: str) -> str | None:
         return None
 
 
-def main():
+def main() -> None:
     # HashMap[filePath, HashMap[String, usize]]
-    all_documents = dict[str, dict[str, int]]
+    all_documents: dict[str, dict[str, int]] = dict()
 
     for doc in listdir("."):
         doc_content = read_doc(doc)
         if doc_content:
+            tf: dict[str, int] = dict()
             lexer = Lexer(doc_content)
-            for i in lexer:
-                if i:
-                    print("".join(i))
+            for token in lexer:
+                term = "".join(token).upper()
+                if term in tf:
+                    tf[term] += 1
+                else:
+                    tf[term] = 1
+            stats = sorted(tf.items(), key=lambda x: x[1], reverse=True)
+            for i, stat in enumerate(stats):
+                if i >= 10:
+                    break
+                print(stat)
+
+            all_documents[doc] = tf
 
 
 if __name__ == "__main__":
