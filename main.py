@@ -1,6 +1,6 @@
 from os import path, listdir
-import docx
-import pymupdf
+from docx import Document as docx_Document
+from pymupdf import Document as pdf_Document
 
 
 def index_document(doc_content: str) -> dict[str, int]:
@@ -12,12 +12,12 @@ def index_document(doc_content: str) -> dict[str, int]:
 
 def parse_pdf(doc_name: str) -> str:
     with open(doc_name, 'rb') as f:
-        return "".join([page.get_text() for page in pymupdf.Document(f)])
+        return "".join([page.get_text() for page in pdf_Document(f)])
 
 
 def parse_docx(doc_name: str) -> str:
     with open(doc_name, 'rb') as f:
-        return "\n".join([i.text for i in docx.Document(f).paragraphs])
+        return "\n".join([i.text for i in docx_Document(f).paragraphs])
 
 
 def read_doc(doc_name: str) -> str | None:
