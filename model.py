@@ -4,7 +4,7 @@ DocFreq = dict[str, int]
 TermFreq = dict[str, int]
 
 
-class Doc():
+class Doc:
     tf: TermFreq
     count: int
 
@@ -12,7 +12,7 @@ class Doc():
 Docs = dict[str, Doc]
 
 
-class Model():
+class Model:
     docs: Docs
     df: DocFreq
 
