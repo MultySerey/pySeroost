@@ -2,31 +2,7 @@ from os import path, listdir
 from docx import Document as docx_Document
 from pymupdf import Document as pdf_Document
 
-
-class Lexer:
-    def __init__(self, content: str) -> None:
-        self.content: list[str] = [*content]
-
-    def trim_left(self) -> None:
-        while len(self.content) > 0 and self.content[0].isspace():
-            self.content = self.content[1:]
-
-    def next_token(self) -> list[str] | None:
-        self.trim_left()
-        if not self.content:
-            return None
-
-    def __iter__(self):
-        self.iter: int = 0
-        return self
-
-    def __next__(self):
-        if self.content and self.iter < len(self.content):
-            out = self.content[self.iter]
-            self.iter += 1
-            return out
-        else:
-            raise StopIteration
+from lexer import Lexer
 
 
 def index_document(doc_content: str) -> dict[str, int]:
@@ -70,7 +46,8 @@ def main():
         if doc_content:
             lexer = Lexer(doc_content)
             for i in lexer:
-                print(i)
+                if i:
+                    print("".join(i))
 
 
 if __name__ == "__main__":
