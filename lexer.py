@@ -17,10 +17,14 @@ class Lexer:
             n += 1
         return self.chop(n)
 
-    def next_token(self) -> list[str] | None:
+    def __iter__(self):
+        return self
+
+    def __next__(self) -> list[str]:
         self.trim_left()
+
         if not self.content:
-            return None
+            raise StopIteration
 
         if self.content[0].isnumeric():
             return self.chop_while(lambda x: x.isnumeric())
@@ -29,12 +33,3 @@ class Lexer:
             return self.chop_while(lambda x: x.isalnum())
 
         return self.chop(1)
-
-    def __iter__(self):
-        return self
-
-    def __next__(self):
-        if self.next_token():
-            return self.next_token()
-        else:
-            raise StopIteration
