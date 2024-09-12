@@ -3,6 +3,11 @@ from docx import Document as docx_Document
 from pymupdf import Document as pdf_Document
 
 
+class Lexer:
+    def __init__(self, content) -> None:
+        self.content: str = content
+
+
 def index_document(doc_content: str) -> dict[str, int]:
     try:
         raise NotImplementedError
