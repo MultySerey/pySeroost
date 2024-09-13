@@ -37,6 +37,9 @@ def read_doc(doc_name: str) -> str | None:
         return None
 
 
+type TF = dict[str, int]
+
+
 def main() -> None:
     # HashMap[filePath, HashMap[String, usize]]
     all_documents: dict[str, dict[str, int]] = dict()
@@ -45,7 +48,7 @@ def main() -> None:
         doc_content = read_doc(doc)
         if doc_content:
             print(doc)
-            tf: dict[str, int] = dict()
+            tf: TF = dict()
             lexer = Lexer(doc_content)
             for token in lexer:
                 term = "".join(token).upper()
