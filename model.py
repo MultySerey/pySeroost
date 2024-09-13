@@ -1,7 +1,7 @@
 from math import log10
 
-DocFreq = dict[str, int]
-TermFreq = dict[str, int]
+type DocFreq = dict[str, int]
+type TermFreq = dict[str, int]
 
 
 class Doc:
@@ -10,7 +10,7 @@ class Doc:
         self.count: int = count
 
 
-Docs = dict[str, Doc]
+type Docs = dict[str, Doc]
 
 
 class Model:
