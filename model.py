@@ -20,11 +20,8 @@ class Model:
 
 
 def compute_tf(t: str, doc: Doc) -> float:
-    n: float = float(doc.count)
-    m: float = float(doc.tf[t])
-    return m / n
+    return float(doc.tf[t]) / float(doc.count)
 
 
 def compute_idf(t: str, n: int, df: DocFreq) -> float:
-    m: float = float(df[t])
-    return log10(float(n) / m)
+    return log10(float(n) / float(df[t]))

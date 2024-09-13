@@ -44,6 +44,7 @@ def main() -> None:
     for doc in listdir("."):
         doc_content = read_doc(doc)
         if doc_content:
+            print(doc)
             tf: dict[str, int] = dict()
             lexer = Lexer(doc_content)
             for token in lexer:
@@ -53,9 +54,7 @@ def main() -> None:
                 else:
                     tf[term] = 1
             stats = sorted(tf.items(), key=lambda x: x[1], reverse=True)
-            for i, stat in enumerate(stats):
-                if i >= 10:
-                    break
+            for stat in stats[:10]:
                 print(stat)
 
             all_documents[doc] = tf
