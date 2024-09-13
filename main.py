@@ -3,13 +3,19 @@ from docx import Document as docx_Document
 from pymupdf import Document as pdf_Document
 
 from lexer import Lexer
+from model import TermFreq
 
 
-def index_document(doc_content: str) -> dict[str, int]:
-    try:
-        raise NotImplementedError
-    except NotImplementedError:
-        print("Not implemented")
+def index_document(doc_content: str) -> TermFreq:
+    tf: TermFreq = dict()
+    lexer = Lexer(doc_content)
+    for token in lexer:
+        term = "".join(token).upper()
+        if term in tf:
+            tf[term] += 1
+        else:
+            tf[term] = 1
+    return tf
 
 
 def parse_pdf(doc_name: str) -> str:
@@ -37,30 +43,17 @@ def read_doc(doc_name: str) -> str | None:
         return None
 
 
-type TF = dict[str, int]
-
-
 def main() -> None:
-    # HashMap[filePath, HashMap[String, usize]]
-    all_documents: dict[str, dict[str, int]] = dict()
+    tf_index: dict[str, TermFreq] = dict()
 
     for doc in listdir("."):
         doc_content = read_doc(doc)
         if doc_content:
-            print(doc)
-            tf: TF = dict()
-            lexer = Lexer(doc_content)
-            for token in lexer:
-                term = "".join(token).upper()
-                if term in tf:
-                    tf[term] += 1
-                else:
-                    tf[term] = 1
-            stats = sorted(tf.items(), key=lambda x: x[1], reverse=True)
-            for stat in stats[:10]:
-                print(stat)
+            print(f"Indexing \"{doc}\"")
+            tf_index[doc] = index_document(doc_content)
 
-            all_documents[doc] = tf
+    for doc in tf_index:
+        print(f"\"{doc}\" has {len(tf_index[doc])} unique tokens")
 
 
 if __name__ == "__main__":
