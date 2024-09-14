@@ -1,7 +1,8 @@
-from os import path, listdir
+from os import path, scandir
 from docx import Document as docx_Document
 from pymupdf import Document as pdf_Document
 import json
+from sys import argv
 
 from lexer import Lexer
 from model import TermFreq
@@ -47,10 +48,14 @@ def read_doc(doc_name: str) -> str | None:
 type TermFreqIndex = dict[str, TermFreq]
 
 
-def main() -> None:
+def index() -> None:
     tf_index: TermFreqIndex = dict()
+    base_folder = "test"
+    base_folder = path.abspath(base_folder)
 
-    for doc in listdir("."):
+    dir_list = [i.path for i in scandir(base_folder) if i.is_file()]
+
+    for doc in dir_list:
         doc_content = read_doc(doc)
         if doc_content:
             print(f"Indexing \"{doc}\"")
@@ -59,8 +64,19 @@ def main() -> None:
     # for doc in tf_index:
     #     print(f"\"{doc}\" has {len(tf_index[doc])} unique tokens")
 
-    with open("dump.json", 'w', encoding="utf-8") as w:
+    with open("index.json", 'w', encoding="utf-8") as w:
         json.dump(tf_index, w, ensure_ascii=False)
+
+
+def main() -> None:
+    try:
+        match argv[1]:
+            case "index":
+                index()
+            case _:
+                print(f"\"{argv[1]}\" is not implemented or not exists at all")
+    except IndexError:
+        print("pass a command")
 
 
 if __name__ == "__main__":
