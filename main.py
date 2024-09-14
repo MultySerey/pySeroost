@@ -1,6 +1,7 @@
 from os import path, listdir
 from docx import Document as docx_Document
 from pymupdf import Document as pdf_Document
+import json
 
 from lexer import Lexer
 from model import TermFreq
@@ -43,8 +44,11 @@ def read_doc(doc_name: str) -> str | None:
         return None
 
 
+type TermFreqIndex = dict[str, TermFreq]
+
+
 def main() -> None:
-    tf_index: dict[str, TermFreq] = dict()
+    tf_index: TermFreqIndex = dict()
 
     for doc in listdir("."):
         doc_content = read_doc(doc)
@@ -52,8 +56,11 @@ def main() -> None:
             print(f"Indexing \"{doc}\"")
             tf_index[doc] = index_document(doc_content)
 
-    for doc in tf_index:
-        print(f"\"{doc}\" has {len(tf_index[doc])} unique tokens")
+    # for doc in tf_index:
+    #     print(f"\"{doc}\" has {len(tf_index[doc])} unique tokens")
+
+    with open("dump.json", 'w', encoding="utf-8") as w:
+        json.dump(tf_index, w, ensure_ascii=False)
 
 
 if __name__ == "__main__":
