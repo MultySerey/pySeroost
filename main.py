@@ -81,15 +81,12 @@ def main() -> None:
     searh_index.add_argument("prompt", type=str, help="Search prompt")
 
     args = args_parser.parse_args()
-    print(args)
 
     match args.subparser_name:
         case "index":
             index(args.folder)
-        case "test":
-            print("b")
         case _:
-            print("q")
+            print(f"{args.subparser_name} is not implemented")
 
 
 if __name__ == "__main__":
