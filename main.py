@@ -11,8 +11,7 @@ from model import TermFreq
 def index_document(doc_content: str) -> TermFreq:
     tf: TermFreq = dict()
     lexer = Lexer(doc_content)
-    for token in lexer:
-        term = "".join(token).upper()
+    for term in lexer:
         if term in tf:
             tf[term] += 1
         else:
@@ -74,19 +73,23 @@ def main() -> None:
                                             dest="subparser_name")
 
     index_parser = subparsers.add_parser("index", help='Index the folder')
-    index_parser.add_argument("-f", "--folder", type=str, default="test",
+    index_parser.add_argument("folder", type=str, default="test",
                               help="The folder with documents to index")
 
     searh_index = subparsers.add_parser("search", help="Search the index")
     searh_index.add_argument("prompt", type=str, help="Search prompt")
 
-    args = args_parser.parse_args()
+    args: Namespace = args_parser.parse_args()
 
     match args.subparser_name:
         case "index":
             index(args.folder)
+        case "search":
+            lexer = Lexer(args.prompt)
+            for token in lexer:
+                print(token)
         case _:
-            print(f"{args.subparser_name} is not implemented")
+            raise NotImplementedError
 
 
 if __name__ == "__main__":

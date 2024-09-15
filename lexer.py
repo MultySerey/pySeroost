@@ -20,16 +20,17 @@ class Lexer:
     def __iter__(self):
         return self
 
-    def __next__(self) -> list[str]:
+    def __next__(self) -> str:
         self.trim_left()
 
         if not self.content:
             raise StopIteration
 
         if self.content[0].isnumeric():
-            return self.chop_while(lambda x: x.isnumeric())
+            return "".join(self.chop_while(lambda x: x.isnumeric()))
 
         if self.content[0].isalpha():
-            return self.chop_while(lambda x: x.isalnum())
+            return "".join(list(map(lambda x: x.upper(),
+                                    self.chop_while(lambda x: x.isalnum()))))
 
-        return self.chop(1)
+        return "".join(self.chop(1))
