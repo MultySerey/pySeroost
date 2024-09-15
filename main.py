@@ -3,6 +3,7 @@ from docx import Document as docx_Document
 from pymupdf import Document as pdf_Document
 import json
 from argparse import ArgumentParser, Namespace
+from math import log10
 
 from lexer import Lexer
 from model import TermFreq
@@ -69,6 +70,12 @@ def tf(t: str, d: TermFreq) -> float:
     return a/b
 
 
+def idf(t: str, d: TermFreqIndex) -> float:
+    N: float = 1 + len(d)
+    M: float = 1 + sum([1 if t in doc else 0 for doc in d.values()])
+    return log10(N/M)
+
+
 def search(prompt: str) -> None:
     with open("index.json", 'r', encoding="utf-8") as f:
         tf_index: TermFreqIndex = json.load(f)
@@ -77,15 +84,19 @@ def search(prompt: str) -> None:
     result: dict[str, float] = dict()
 
     for doc in tf_index:
-        total_tf: float = 0
+        # print(doc.split("\\")[-1])
+        rank: float = 0
         for term in lexer:
-            total_tf += tf(term, tf_index[doc])
-        result[doc.split("\\")[-1]] = total_tf
+            x = tf(term, tf_index[doc])*idf(term, tf_index)
+            rank += x
+            # print(term, x)
+        result[doc.split("\\")[-1]] = rank
 
-    result = dict(sorted(result.items(), key=lambda item: item[1]))
+    result = dict(sorted(result.items(), key=lambda item: item[1],
+                         reverse=True))
 
     for k, v in result.items():
-        print(k, v)
+        print(k, "\n\t", v)
 
 
 def main() -> None:
