@@ -2,7 +2,7 @@ from os import path, scandir
 from docx import Document as docx_Document
 from pymupdf import Document as pdf_Document
 import json
-from sys import argv
+from argparse import ArgumentParser, Namespace
 
 from lexer import Lexer
 from model import TermFreq
@@ -48,9 +48,8 @@ def read_doc(doc_name: str) -> str | None:
 type TermFreqIndex = dict[str, TermFreq]
 
 
-def index() -> None:
+def index(base_folder) -> None:
     tf_index: TermFreqIndex = dict()
-    base_folder = "test"
     base_folder = path.abspath(base_folder)
 
     dir_list = [i.path for i in scandir(base_folder) if i.is_file()]
@@ -69,14 +68,28 @@ def index() -> None:
 
 
 def main() -> None:
-    try:
-        match argv[1]:
-            case "index":
-                index()
-            case _:
-                print(f"\"{argv[1]}\" is not implemented or not exists at all")
-    except IndexError:
-        print("pass a command")
+    args_parser = ArgumentParser(prog="PROG")
+    subparsers = args_parser.add_subparsers(title='Subcommands',
+                                            required=True,
+                                            dest="subparser_name")
+
+    index_parser = subparsers.add_parser("index", help='Index the folder')
+    index_parser.add_argument("-f", "--folder", type=str, default="test",
+                              help="The folder with documents to index")
+
+    searh_index = subparsers.add_parser("search", help="Search the index")
+    searh_index.add_argument("prompt", type=str, help="Search prompt")
+
+    args = args_parser.parse_args()
+    print(args)
+
+    match args.subparser_name:
+        case "index":
+            index(args.folder)
+        case "test":
+            print("b")
+        case _:
+            print("q")
 
 
 if __name__ == "__main__":
