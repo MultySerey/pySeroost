@@ -59,11 +59,33 @@ def index(base_folder) -> None:
             print(f"Indexing \"{doc}\"")
             tf_index[doc] = index_document(doc_content)
 
-    # for doc in tf_index:
-    #     print(f"\"{doc}\" has {len(tf_index[doc])} unique tokens")
-
     with open("index.json", 'w', encoding="utf-8") as w:
         json.dump(tf_index, w, ensure_ascii=False)
+
+
+def tf(t: str, d: TermFreq) -> float:
+    a = float(d[t] if t in d else 0)
+    b = float(sum(d.values()))
+    return a/b
+
+
+def search(prompt: str) -> None:
+    with open("index.json", 'r', encoding="utf-8") as f:
+        tf_index: TermFreqIndex = json.load(f)
+
+    lexer = Lexer(prompt)
+    result: dict[str, float] = dict()
+
+    for doc in tf_index:
+        total_tf: float = 0
+        for term in lexer:
+            total_tf += tf(term, tf_index[doc])
+        result[doc.split("\\")[-1]] = total_tf
+
+    result = dict(sorted(result.items(), key=lambda item: item[1]))
+
+    for k, v in result.items():
+        print(k, v)
 
 
 def main() -> None:
@@ -85,9 +107,7 @@ def main() -> None:
         case "index":
             index(args.folder)
         case "search":
-            lexer = Lexer(args.prompt)
-            for token in lexer:
-                print(token)
+            search(args.prompt)
         case _:
             raise NotImplementedError
 
