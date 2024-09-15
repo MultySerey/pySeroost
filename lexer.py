@@ -1,6 +1,7 @@
 class Lexer:
     def __init__(self, content: str) -> None:
         self.content: list[str] = [*content]
+        self.__content_lock = self.content.copy()
 
     def trim_left(self) -> None:
         while len(self.content) > 0 and self.content[0].isspace():
@@ -18,6 +19,7 @@ class Lexer:
         return self.chop(n)
 
     def __iter__(self):
+        self.content = self.__content_lock
         return self
 
     def __next__(self) -> str:
