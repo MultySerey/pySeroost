@@ -96,8 +96,11 @@ def search(prompt: str) -> None:
             print(term, x)
         result[doc.split("\\")[-1]] = rank
 
-    result = dict(sorted(result.items(), key=lambda item: item[1],
-                         reverse=True))
+    result = dict(sorted(
+        result.items(),
+        key=lambda item: item[1],
+        reverse=True
+    ))
 
     for k, v in result.items():
         print(k, "\n\t", v)
@@ -105,13 +108,19 @@ def search(prompt: str) -> None:
 
 def main() -> None:
     args_parser = ArgumentParser(prog="PROG")
-    subparsers = args_parser.add_subparsers(title='Subcommands',
-                                            required=True,
-                                            dest="subparser_name")
+    subparsers = args_parser.add_subparsers(
+        title='Subcommands',
+        required=True,
+        dest="subparser_name"
+    )
 
     index_parser = subparsers.add_parser("index", help='Index the folder')
-    index_parser.add_argument("folder", type=str, default="test",
-                              help="The folder with documents to index")
+    index_parser.add_argument(
+        "folder",
+        type=str,
+        default="test",
+        help="The folder with documents to index"
+    )
 
     search_index = subparsers.add_parser("search", help="Search the index")
     search_index.add_argument("prompt", type=str, help="Search prompt")
