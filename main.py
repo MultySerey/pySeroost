@@ -67,13 +67,17 @@ def index(base_folder) -> None:
 def tf(t: str, d: TermFreq) -> float:
     a = float(d[t] if t in d else 0)
     b = float(sum(d.values()))
+    # print(a, b)
     return a/b
 
 
 def idf(t: str, d: TermFreqIndex) -> float:
-    N: float = 1 + len(d)
-    M: float = 1 + sum([1 if t in doc else 0 for doc in d.values()])
-    return log10(N/M)
+    n: float = len(d)
+    m: float = sum([1 if t in doc else 0 for doc in d.values()])
+    m += 1 if m == 0 else 0
+    n += 1 if m == n else 0
+    # print(n, m)
+    return log10(n/m)
 
 
 def search(prompt: str) -> None:
@@ -84,12 +88,12 @@ def search(prompt: str) -> None:
     result: dict[str, float] = dict()
 
     for doc in tf_index:
-        # print(doc.split("\\")[-1])
+        print(doc.split("\\")[-1])
         rank: float = 0
         for term in lexer:
             x = tf(term, tf_index[doc])*idf(term, tf_index)
             rank += x
-            # print(term, x)
+            print(term, x)
         result[doc.split("\\")[-1]] = rank
 
     result = dict(sorted(result.items(), key=lambda item: item[1],
@@ -109,8 +113,8 @@ def main() -> None:
     index_parser.add_argument("folder", type=str, default="test",
                               help="The folder with documents to index")
 
-    searh_index = subparsers.add_parser("search", help="Search the index")
-    searh_index.add_argument("prompt", type=str, help="Search prompt")
+    search_index = subparsers.add_parser("search", help="Search the index")
+    search_index.add_argument("prompt", type=str, help="Search prompt")
 
     args: Namespace = args_parser.parse_args()
 
